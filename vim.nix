@@ -5,11 +5,12 @@ in {
     enable = true;
     viAlias = true;
     vimAlias = true;
-    extraConfig = builtins.readFile ./vimrc;
     plugins = plugins.plugins;
     coc = {
       enable = true;
       settings = builtins.fromJSON (builtins.readFile ./coc.json);
     };
+    extraConfig = (pkgs.callPackage ./vimrc.nix { }).extraConfig
+      + builtins.readFile ./vimrc;
   };
 }

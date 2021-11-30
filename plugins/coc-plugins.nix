@@ -1,6 +1,7 @@
 { pkgs, ... }: {
   plugins = with pkgs.vimPlugins; [
     coc-json
+    coc-markdownlint
     coc-pyright
     coc-nvim
     coc-vimtex

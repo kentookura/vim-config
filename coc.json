@@ -2,6 +2,15 @@
   "suggest.enablePreview": true,
   "coc.preferences.formatOnSaveFiletypes": ["typescript"],
   "languageserver": {
+    "digestif": {
+      "command": "digestif",
+      "filetypes": ["tex"]
+    },
+    "efm": {
+      "command": "efm-langserver",
+      "args": [],
+      "filetypes": ["vim"]
+    },
     "nix": {
       "command": "rnix-lsp",
       "filetypes": ["nix"]

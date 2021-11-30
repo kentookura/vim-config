@@ -6,41 +6,12 @@
 
 
 filetype indent plugin on
-set nocompatible
 let mapleader = "\\"
 syntax on
-set autoread
+
 au FocusGained, BufEnter * checktime
-set laststatus=2
-set clipboard+=unnamedplus
-set encoding=utf-8
-set fileencoding=utf-8
-set foldmethod=syntax
-set hidden
-set nowrap
-set hlsearch
-set ignorecase smartcase
-set expandtab ts=2 sts=2 sw=2
-set autoindent
-set smarttab
-set foldmethod=indent
-set foldnestmax=10
-set nofoldenable
-set foldlevel=2
-set nobackup
-set noswapfile
-set nowritebackup
-set number relativenumber
-set path+=**
-set so=10
-set splitbelow
-set splitright
-set wildignore+=*.opus,*.flac,*.pdf,*.jpg,*.png,*.so,*.swp,*.zip,*.gzip,*.bz2,*.tar,*.xz,*.lrzip,*.lrz,*.mp3,*.ogg,*.mp4,*.gif,*.jpeg,*.webm,*.hi,*.o
-set wildmenu
-set lazyredraw
-set magic
-set showmatch
-set mat=2
+au BufRead vimrc,home.nix silent! lcd %:p:h
+au BufRead vimrc.nix set filetype=nix
 
 command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
 nnoremap ! :!
@@ -60,9 +31,28 @@ let javaScript_fold=1
 
 
 "-------------------------------------visual-------------------------------
+vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
+vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 
-vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR></C-R>=@/<CR><CR>
-vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR></C-R>=@/<CR><CR>
+nnoremap c* /\<<C-R>=expand('<cword>')<CR>\>/C<CR>``cgn
+nnoremap c# ?\<<C-R>=expand('<cword>')<CR>\>/C<CR>``cgN
+
+function! VisualSelection(direction, extra_filter) range
+  let l:saved_reg = @"
+  execute "normal! vgvy"
+
+  let l:pattern = escape(@", "\\/.*'$^~[]")
+  let l:pattern = substitute(l:pattern, "\n$", "", "")
+
+  if a:direction == 'gv'
+      call CmdLine("Ack '" . l:pattern . "' " )
+  elseif a:direction == 'replace'
+      call CmdLine("%s" . '/'. l:pattern . '/')
+  endif
+
+  let @/ = l:pattern
+  let @" = l:saved_reg
+endfunction
 
 "-------------------------------------remaps-------------------------------
 
@@ -116,7 +106,6 @@ map <C-b> :Buffers<CR>
 map <Leader>s :SyntasticToggleMode<CR>
 
 "----------------------------------autocmds--------------------------------
-
 autocmd vimenter * ++nested colorscheme gruvbox
 let g:gruvbox_contrast_dark = 'medium'
 let g:gruvbox_termcolors = 256
@@ -129,16 +118,6 @@ autocmd! User GoyoEnter Limelight
 autocmd! User GoyoLeave Limelight
 
 "----------------------------------syntax----------------------------------
-"
-syntax enable
-
-"autocmd FileType haskell setlocal expandtab ts=2 sts=2 sw=2
-"autocmd FileType json setlocal sw=2
-"autocmd FileType json setlocal ts=2 sts=2 sw=2
-"autocmd FileType html setlocal ts=2 sts=2 sw=2
-"autocmd FileType css setlocal expandtab ts=2 sts=2 sw=2
-"autocmd FileType scss setlocal expandtab ts=2 sts=2 sw=2
-
 autocmd BufNewFile,BufRead *.md set conceallevel=0
 autocmd BufNewFile,BufRead *.md let maplocalleader = "\\"
 autocmd BufNewFile,BufRead *.tex let maplocalleader = "\\"
@@ -152,13 +131,7 @@ autocmd BufNewFile,BufRead xmobar* set syntax=haskell
 autocmd BufRead xmonad.hs set foldmethod=marker
 autocmd BufNewFile,BufRead *.md set tabstop=4
 
-" https://stsievert.com/blog/2016/01/06/vim-jekyll-mathjax/
-" Call everytime we open a Markdown file
-"autocmd BufRead,BufNewFile,BufEnter *.md,*.markdown call MathAndLiquid()
-
-
 "----------------------------markdown/pandoc------------------------------
-
 augroup panoc_syntax
   au! BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
 augroup END
@@ -174,86 +147,4 @@ let g:fzf_buffers_jump = 1
 let $FZF_DEFAULT_OPTS='--reverse'
 
 let g:limelight_conceal_ctermfg = 'gray'
-"----------------------------------lean-----------------------------------
 
-lua <<EOF
--- If you don't already have a preferred neovim LSP setup, you may want
--- to reference the nvim-lspconfig documentation, which can be found at:
--- https://github.com/neovim/nvim-lspconfig#keybindings-and-completion
--- For completeness (of showing this plugin's settings), we show
--- a barebones LSP attach handler (which will give you Lean LSP
--- functionality in attached buffers) here:
-
-require('lean').setup{
-  -- Enable the Lean language server(s)?
-  --
-  -- false to disable, otherwise should be a table of options to pass to
-  --  `leanls` and/or `lean3ls`.
-  --
-  -- See https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#leanls for details.
-
-  -- Lean 4
-  lsp = { on_attach = on_attach },
-
-  -- Lean 3
-  lsp3 = { on_attach = on_attach },
-
-  -- Abbreviation support
-  abbreviations = {
-    -- Set one of the following to true to enable abbreviations
-    builtin = true, -- built-in expander
-    compe = false, -- nvim-compe source
-    snippets = false, -- snippets.nvim source
-    -- additional abbreviations:
-    extra = {
-      -- Add a \wknight abbreviation to insert ♘
-      --
-      -- Note that the backslash is implied, and that you of
-      -- course may also use a snippet engine directly to do
-      -- this if so desired.
-      wknight = '♘',
-    },
-    -- Change if you don't like the backslash
-    -- (comma is a popular choice on French keyboards)
-    leader = '\\',
-  },
-
-  -- Enable suggested mappings?
-  --
-  -- false by default, true to enable
-  mappings = true,
-
-  -- Infoview support
-  infoview = {
-    -- Automatically open an infoview on entering a Lean buffer?
-    autoopen = true,
-    -- Set the infoview windows' widths
-    width = 50,
-  },
-
-  -- Progress bar support
-  progress_bars = {
-    -- Enable the progress bars?
-    enable = true,
-    -- Use a different priority for the signs
-    priority = 10,
-  },
-}
-EOF
-
-"TreeSitter
-lua <<EOF
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-  sync_install = false, -- install languages synchronously (only applied to `ensure_installed`)
-  highlight = {
-    enable = true,              -- false will disable the whole extension
-    disable = {"haskell"},
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
-    additional_vim_regex_highlighting = false,
-  },
-}
-EOF

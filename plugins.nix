@@ -5,11 +5,27 @@ let
   markup = pkgs.callPackage ./plugins/markup.nix { };
   coc-plugins = pkgs.callPackage ./plugins/coc-plugins.nix { };
   eyecandy = pkgs.callPackage ./plugins/eyecandy.nix { };
+
+  mklua = lua: ''
+    lua <<EOF
+    ${lua}
+    EOF
+  '';
+
+  lean = with plugs; {
+    plugin = lean-nvim;
+    config = mklua (builtins.readFile ./lean.lua);
+  };
+  treesitter = with plugs; {
+    plugin = nvim-treesitter;
+    config = mklua (builtins.readFile ./treesitter.lua);
+  };
 in {
   plugins = with plugs;
     haskell-plugins.plugins ++ coc-plugins.plugins ++ eyecandy.plugins
     ++ markup.plugins ++ [
-      nvim-treesitter
+      treesitter
+      lean
       vim-eunuch
       gx-extended
       tabular
@@ -22,7 +38,6 @@ in {
       vim-vsnip
       switch-vim
       plenary-nvim
-      lean-nvim
       vim-surround
       auto-pairs
       fzf-vim
