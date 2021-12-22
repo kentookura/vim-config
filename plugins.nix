@@ -24,7 +24,9 @@ in {
   plugins = with plugs;
     haskell-plugins.plugins ++ coc-plugins.plugins ++ eyecandy.plugins
     ++ markup.plugins ++ [
+      #vim-vsnip
       treesitter
+      fugitive
       lean
       vim-eunuch
       gx-extended
@@ -32,10 +34,8 @@ in {
       neomake
       ack-vim
       yuck-vim
-      emmet-vim
       nvim-lspconfig
       nvim-compe
-      vim-vsnip
       switch-vim
       plenary-nvim
       vim-surround

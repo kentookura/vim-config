@@ -1,33 +1,38 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+let util = import ../utils.nix;
+in {
   plugins = with pkgs.vimPlugins // import ./extraPlugins.nix; [
-    {
-      plugin = vim-startify;
-      config = builtins.readFile ./eyecandy/startify.vim;
-    }
+    goyo
+    limelight-vim
+    everforest
+    vim-scrollstatus
+    minimap-vim
     {
       plugin = chadtree;
-      config = builtins.readFile ./eyecandy/chadtree.vim;
+      config = util.uncomment ./eyecandy/chadtree.vim;
     }
     {
       plugin = neoformat;
-      config = builtins.readFile ./eyecandy/neoformat.vim;
-    }
-    {
-      plugin = limelight-vim;
-      config = "";
-    }
-    {
-      plugin = dkasak-gruvbox;
-      config = "";
+      config = util.uncomment ./eyecandy/neoformat.vim;
     }
     {
       plugin = lightline-vim;
-      config = builtins.readFile ./eyecandy/lightline.vim;
+      config = util.uncomment ./eyecandy/lightline.vim;
+    }
+    lightline-gruvbox
+    {
+      plugin = dkasak-gruvbox;
+      config = ''
+        let g:gruvbox_transparent_bg = 1
+        let g:gruvbox_italic = 1
+        let g:gruvbox_invert_selection = 1
+        let g:gruvbox_contrast_dark = "soft"
+        let g:gruvbox_termcolors = 256
+              '';
     }
     {
-      plugin = goyo;
-      config = "";
+      plugin = vim-hexokinase;
+      config = "let g:Hexokinase_highlighers = ['foreground']";
     }
   ];
-
 }

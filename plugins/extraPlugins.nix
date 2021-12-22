@@ -2,6 +2,33 @@ with import <nixpkgs> { };
 
 let inherit (vimUtils) buildVimPluginFrom2Nix;
 in {
+  "vim-scrollstatus" = buildVimPluginFrom2Nix {
+    version = "";
+    pname = "vim-scrollstatus";
+    src = fetchgit {
+      url = "https://github.com/ojroques/vim-scrollstatus";
+      rev = "a4ac7d43f0d470cb91f821d523bd2d0b04bedac4";
+      sha256 = "/LqKlK2p8kaYMMdm2rsY6z9iIfQyCLlelXrIEcQgRuc=";
+    };
+  };
+  "everforest" = buildVimPluginFrom2Nix {
+    version = "";
+    pname = "everforest";
+    src = fetchgit {
+      url = "https://github.com/sainnhe/everforest";
+      rev = "0d1576a5717ba1d1ecf18e5917ad7dcdec628812";
+      sha256 = "4nkft/l1usrLIXS+inGwEZpJMP5CjLCkCM2Eqrk8eHo=";
+    };
+  };
+  "lightline-gruvbox" = buildVimPluginFrom2Nix {
+    version = "";
+    pname = "lightline-gruvbox";
+    src = fetchgit {
+      url = "https://github.com/shinchu/lightline-gruvbox.vim";
+      rev = "e94af37820d9c2e6d9eb27c735bb8ef926a66c7e";
+      sha256 = "UKe89lta8GHw0ToWdlfR5v+sGi9xosjjAx80rAbrsPM=";
+    };
+  };
   "dkasak-gruvbox" = buildVimPluginFrom2Nix {
     pname = "dkasak-gruvbox";
     version = "";

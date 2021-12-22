@@ -1,20 +1,22 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+let util = import ../utils.nix;
+in {
   plugins = with pkgs.vimPlugins; [
     {
       plugin = vim-pandoc;
-      config = builtins.readFile ./markup/pandoc.vim;
+      config = util.uncomment ./markup/pandoc.vim;
     }
     {
       plugin = vim-pandoc-syntax;
-      config = builtins.readFile ./markup/pandoc-syntax.vim;
+      config = util.uncomment ./markup/pandoc-syntax.vim;
     }
     {
       plugin = vimwiki;
-      config = builtins.readFile ./markup/vimwiki.vim;
+      config = util.uncomment ./markup/vimwiki.vim;
     }
     {
       plugin = vimtex;
-      config = builtins.readFile ./markup/vimtex.vim;
+      config = util.uncomment ./markup/vimtex.vim;
     }
   ];
 }

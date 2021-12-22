@@ -1,6 +1,5 @@
 {
   "suggest.enablePreview": true,
-  "coc.preferences.formatOnSaveFiletypes": ["typescript"],
   "languageserver": {
     "digestif": {
       "command": "digestif",

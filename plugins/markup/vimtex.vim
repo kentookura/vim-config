@@ -28,3 +28,6 @@ let g:vimtex_toc_config = {
       \ 'show_numbers' : 1,
       \ 'mode' : 2,
       \}
+if empty(v:servername) && exists('*remote_startserver')
+  call remote_startserver('VIM')
+endif

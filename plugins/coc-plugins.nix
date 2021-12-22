@@ -1,4 +1,6 @@
-{ pkgs, ... }: {
+{ pkgs, lib, ... }:
+let lib = import ../utils.nix;
+in {
   plugins = with pkgs.vimPlugins; [
     coc-json
     coc-markdownlint
@@ -13,7 +15,7 @@
     coc-json
     {
       plugin = coc-nvim;
-      config = builtins.readFile ./coc/coc.vim;
+      config = lib.uncomment ./coc/coc.vim;
     }
   ];
 }
